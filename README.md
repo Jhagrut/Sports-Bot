@@ -1,4 +1,4 @@
-# 1st Place Winner of Unicode ML Summer Course 2021 - Gathering and Classification of Sports Injury Data
+# Twitter Injury Report Detection
 
 This directory contains the twitter bot project submitted to *Unicode Research*,
 an online teaching and research organization which provides classes and competitions
