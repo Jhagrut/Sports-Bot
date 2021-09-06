@@ -4,14 +4,12 @@ This directory contains the twitter bot project submitted to *Unicode Research*,
 an online teaching and research organization which provides classes and competitions
 for students to engage in.
 
-The goal of this project is to create a computer program that can classify injury
-reports from twitter data in Baseball. The best model found during the 8-week course
-and competition was a pre-trained RoBERTa Neural Network. The long-term goal of this
-project is to collect all injury data possible for sports players so that a
-more direct analysis of the impact of injuries can be completed.
+The goal of this project is to use a model that can classify injury
+reports in Baseball from Twitter data. The best model found during the 8-week course
+and competition was the pre-trained RoBERTa Neural Network. The long-term goal of this
+project is to collect injury data possible for all sports players, classify the type of injury and create a website where this data can be displayed.
 
-Among all applicants, this project won 1st place for its direct impact/inspiration
-on industry and soundness of research.
+Among all applicants, this project won 1st place.
 
 <center>
 
