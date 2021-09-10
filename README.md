@@ -33,6 +33,9 @@ Among all applicants, this project won 1st place.
 
 </center>
 
+The best in each category is bolded, but for our purposed our most important
+metric is specificity.
+
 The score most valued for our use case was the sensitivity, so we label the best
 "classical" machine learning model and best neural net model with bold text. All 
 classical models were trained on the full dataset (15,000 datapoints) using 
