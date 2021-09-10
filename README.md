@@ -13,7 +13,7 @@ Among all applicants, this project won 1st place.
 
 <center>
 
-|  Model  |  Data Type  |  Sensitivity  | Specificity |  Precision  |  F1 Score  |  Accuracy  |
+|  Model  |  Data Type / Epochs  |  Sensitivity  | Specificity |  Precision  |  F1 Score  |  Accuracy  |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | kNN | Boolean | 0.2734 | 0.9965 | 0.9182 | 0.4214 | 0.9058 |
 | kNN | TF-IDF | 0.1957 | 0.9942 | 0.8294 | 0.3167 | 0.8941 |
