@@ -78,55 +78,64 @@ def scrape_to_merge():
     data.to_csv('merged2.csv', index=False)
     del data
 
-def merged_to_filtered():
 
-    raw_data = pd.read_csv('merged2.csv')
-    
-    raw_data['urls'] = raw_data['urls'].apply(lambda x: str(x).lstrip("[").rstrip("]"))
-    raw_data['link_present'] = raw_data['urls'].apply(lambda x: ifelse(len(x) > 0, 1, 0))
-    raw_data['photos'] = raw_data['photos'].apply(lambda x: str(x).lstrip("[").rstrip("]"))
-    raw_data['photo_present'] = raw_data['photos'].apply(lambda x: ifelse(len(x) > 0, 1, 0))
-    raw_data['retweet'] = raw_data['retweet'].apply(lambda x: ifelse(x, 1, 0))
-    
-    file = open('labeledTweets.txt', 'r')
-    labeledData = file.readlines()
-    file.close()
-    
-    labeledData = [tweets.rstrip('\n') for tweets in labeledData]
-    raw_data['injury_report'] = raw_data['link'].apply(lambda x: '1' if x in labeledData else 'x')
-    
-    raw_data = raw_data[['injury_report', 'retweet', 'photo_present', 'link_present', 'replies_count', 'retweets_count',
-         'likes_count', 'username', 'tweet']]
-    
-    filtered_data = pd.read_csv('filtered.csv', index=False)
-    
-    key_diff = set(raw_data.tweet).difference(filtered_data.tweet)
-    where_diff = raw_data.tweet.isin(key_diff)
-    
-    filtered_data = filtered_data.append(raw_data[where_diff], ignore_index=True)
-    
-    filtered_data.to_csv('filtered.csv', index=False)
-    del filtered_data
-    del raw_data
-    del labeledData
+def aggregate_merged(file, mergetype):
+    if mergetype == 1:
+
+        data = pd.read_csv(file)
+        data['urls'] = data['urls'].apply(lambda x: str(x).lstrip("[").rstrip("]"))
+        data['link_present'] = data['urls'].apply(lambda x: ifelse(len(x) > 0, 1, 0))
+        data['photos'] = data['photos'].apply(lambda x: str(x).lstrip("[").rstrip("]"))
+        data['photo_present'] = data['photos'].apply(lambda x: ifelse(len(x) > 0, 1, 0))
+        data['retweet'] = data['retweet'].astype(bool).apply(lambda x: ifelse(x, 1, 0))
+
+    else:
+
+        data = pd.concat(file)
+
+    final = data.groupby(['link', 'tweet']).agg({'replies_count': 'max', 'retweets_count': 'max', 'likes_count': 'max',
+                                                 'link_present': 'max', 'photo_present': 'max', 'retweet': 'max'})
+
+    final['replies_count'] = final['replies_count'].astype(int)
+    final['retweets_count'] = final['retweets_count'].astype(int)
+    final['likes_count'] = final['likes_count'].astype(int)
+    final['link_present'] = final['link_present'].astype(int)
+    final['photo_present'] = final['photo_present'].astype(int)
+    final['retweet'] = final['retweet'].astype(int)
+
+    final = final.reset_index(0).reset_index(0)
+
+    return final
+
+def append_labels(data, file):
+    labeled = pd.read_csv(file)
+    labeled = labeled[['injury_report', 'tweet']]
+    labeled = labeled[labeled['injury_report'] != 'x']
+    labeled = labeled.drop_duplicates()
+    labeled = labeled.dropna()
+    filtered = data.merge(labeled, on='tweet', how='left')
+    try:
+        filtered['injury_report'] = filtered['injury_report_y'].fillna('x')
+        filtered.drop(['injury_report_x', 'injury_report_y'], axis=1, inplace=True)
+    except KeyError:
+        pass
+    return filtered
+
+def merged_to_filtered():
+    file_aggregates = [aggregate_merged(filename, 1) for filename in os.listdir() if 'merged' in filename]
+    filtered = aggregate_merged(file_aggregates, 0)
+    filtered = append_labels(filtered, 'filtered2.csv')
+    filtered.to_csv('filtered2.csv', index=False)
+
+def label_filtered_duplicates():
+    filtered = pd.read_csv('filtered2.csv')
+    labeled_data = filtered[filtered['injury_report'] != 'x'][['tweet', 'injury_report']].drop_duplicates()
+    labeled_data.to_csv('copy.csv', index=False)
+    filtered = append_labels(filtered, 'copy.csv')
+    filtered.to_csv('filtered2.csv', index=False)
     
 def filtered_to_clean():
-
-    data = pd.read_csv('filtered.csv')
-    
-    tweets = data[data['injury_report'] != 'x']['tweet'].value_counts(ascending=False)
-    tweets = tweets[tweets > 1].index
-    
-    for i in range(len(tweets)):
-       
-        if '0' in list(data[data['tweet'] == tweets[i]]['injury_report']):
-            data.loc[data[data['tweet'] == tweets[i]].index, 'injury_report'] = '0'
-           
-        elif '1' in list(data[data['tweet'] == tweets[i]]['injury_report']):
-            data.loc[data[data['tweet'] == tweets[i]].index, 'injury_report'] = '1'
-
-    data.to_csv('filtered.csv', index=False)
-    
+    data = pd.read_csv('filtered2.csv')
     data = data[data['injury_report'] != 'x']
     data = data[['injury_report', 'tweet']]
     data = data.drop_duplicates()
@@ -137,8 +146,7 @@ def filtered_to_clean():
     del data
     
 def get_data_to_label():
-    
-    data = pd.read_csv('filtered.csv')
+    data = pd.read_csv('filtered2.csv')
     data = data[data['injury_report'] == 'x']
     data = data[['injury_report', 'tweet']]
     data.drop_duplicates(inplace = True)
@@ -157,4 +165,10 @@ def get_data_to_label():
     positives = positives[['injury_report', 'tweet']]
     positives.to_csv('positive_samples.csv')
     del data
+
+def label_new_data():
+    filtered = pd.read_csv('filtered2.csv')
+    filtered = append_labels(filtered, 'sampled.csv')
+    filtered = append_labels(filtered, 'positive_samples.csv')
+    filtered.to_csv('filtered2.csv', index=False)
     
