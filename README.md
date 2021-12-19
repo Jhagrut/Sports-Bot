@@ -1,6 +1,10 @@
-# Twitter Injury Report Detection
+# Sports-Bot: Twitter Injury Report Detection
 
-This directory contains the twitter bot project submitted to *Unicode Research*,
+App: [Sports-Bot-App](sports-bot-app.herokuapp.com) <br>
+Website: [Sports-Bot](https://sports-bot.netlify.app/)<br>
+Presentation: [Presentation](https://github.com/Jhagrut/Sports-Bot/blob/main/Project%20Presentation/Classification_Gathering%20of%20Sports%20Injury%20Data%20Presentation.pdf)<br>
+
+This directory contains the twitter bot project submitted to [*Unicode Research*](https://djunicode.in/),
 an online teaching and research organization which provides classes and competitions
 for students to engage in.
 
@@ -41,18 +45,6 @@ The score most valued for our use case was the sensitivity, so we label the best
 classical models were trained on the full dataset (15,000 datapoints) using 
 stratified sampling, while all Neural Networks were completed on a curated sample 
 of the dataset (7,000 datapoints) to deal with class imbalance issues.
-
-**Final Presentation on Google Slides:**
-
-https://docs.google.com/presentation/d/14rEB-cdVIzm6ITT4htV-2WRAQc1vFt29-4AF6MiwzWw/edit?usp=sharing
-
-**Final Presentation Video:**
-
-https://www.youtube.com/watch?v=Ff__8mj2oAI&t=5740s&ab_channel=SwapneelMehta
-
-**Unicode Research:**
-
-https://djunicode.in/
 
 *This Folder represents the most up-to-date version of the project. For seeing
 the project as it looked a week after the Final Presentation, please see the
