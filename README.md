@@ -1,7 +1,7 @@
 # Sports-Bot: Twitter Injury Report Detection
 
 App: [Sports-Bot-App](sports-bot-app.herokuapp.com) <br>
-Website: [Sports-Bot](https://sports-bot.netlify.app/)<br>
+Website: [Sports-Bot](https://sports-bot-official.herokuapp.com/)<br>
 Presentation: [Presentation](https://github.com/Jhagrut/Sports-Bot/blob/main/Project%20Presentation/Classification_Gathering%20of%20Sports%20Injury%20Data%20Presentation.pdf)<br>
 
 This directory contains the twitter bot project submitted to [*Unicode Research*](https://djunicode.in/),
